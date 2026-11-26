@@ -313,7 +313,11 @@ var VLOGS = [
 
   [].forEach.call(bvBtns, function(btn){
     btn.addEventListener("click", function(){
-      setBVTab(btn.dataset.bv);
+      var t = btn.dataset.bv;
+      setBVTab(t);
+      if(window.history && window.history.replaceState){
+        window.history.replaceState(null, "", t === "vlogs" ? "#vlogs" : window.location.pathname + window.location.search);
+      }
     });
   });
 

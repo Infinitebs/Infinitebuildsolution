@@ -918,7 +918,7 @@ nav a.on {
   aspect-ratio: 16 / 9;
   border-radius: 10px;
   overflow: hidden;
-  background: #0a0705;
+  background: linear-gradient(135deg, #2b1a0e 0%, #140c06 100%);
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
 

@@ -29,7 +29,7 @@
 }
 
 /* Everything inside a coffee box (and the hero) uses light text */
-.sp-card, .card, .gal-item, .blog-card, .vlog-card, .vlog-empty, .pc, .founder-card, .stats, .bn {
+.sp-card, .card, .gal-item, .blog-card, .vlog-stage, .vlog-playlist, .vlog-empty, .pc, .founder-card, .stats, .bn {
   --fg: #f7f0e6;
   --fg-sec: #dccdbb;
   --fg-mut: #b8a592;
@@ -110,11 +110,11 @@ nav a:hover { color: #2a1c14; background: rgba(42, 28, 20, .07); }
 .sec h2::before { background: var(--or); }
 
 /* ---------- coffee boxes ---------- */
-.sp-card, .blog-card, .vlog-card, .vlog-empty, .gal-item, .pc, .founder-card {
+.sp-card, .blog-card, .vlog-stage, .vlog-playlist, .vlog-empty, .gal-item, .pc, .founder-card {
   box-shadow: 0 14px 34px rgba(54, 30, 10, .26);
 }
 .founder-card { background: var(--bg-card); }
-.sp-card:hover, .blog-card:hover, .vlog-card:hover, .gal-item:hover, .card:hover {
+.sp-card:hover, .blog-card:hover, .gal-item:hover, .card:hover {
   box-shadow: 0 22px 44px rgba(54, 30, 10, .36), 0 0 26px var(--or-glow);
 }
 .stats {
@@ -214,7 +214,7 @@ input:focus, select:focus, textarea:focus { border-color: var(--or); box-shadow:
 
 /* section and card headings; the hero headline keeps the bold Archivo caps */
 h2, h3,
-.sp-title, .card h3, .gal-body h3, .blog-card h2, .vlog-body h2, .vlog-empty h2,
+.sp-title, .card h3, .gal-body h3, .blog-card h2, .vlog-stage-info h2, .vlog-empty h2,
 .founder-bio h2, .founder-name-tag h3, .pc h2 {
   font-family: var(--serif);
   font-weight: 600;

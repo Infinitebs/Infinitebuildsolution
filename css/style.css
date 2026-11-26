@@ -731,62 +731,245 @@ nav a.on {
   margin-top: 0;
 }
 
-.vlog-grid {
+.vlog-showcase {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
-  gap: 30px;
+  grid-template-columns: minmax(0, 1.65fr) minmax(300px, 1fr);
+  gap: 24px;
+  align-items: start;
 }
 
-.vlog-card {
+.vlog-stage,
+.vlog-playlist {
   background: var(--bg-card);
   backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
   border: 1px solid var(--border-warm);
-  border-radius: 18px;
+  border-radius: 20px;
   overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5);
-  transition: transform 0.35s ease, border-color 0.35s ease, box-shadow 0.35s ease;
+  box-shadow: 0 18px 44px rgba(0, 0, 0, 0.45);
 }
 
-.vlog-card:hover {
-  transform: translateY(-6px);
-  border-color: var(--border-hover);
-  box-shadow: 0 24px 50px rgba(0, 0, 0, 0.7), 0 0 30px var(--or-glow);
-}
-
-.vlog-media {
+.vlog-player-wrap {
   position: relative;
   width: 100%;
   aspect-ratio: 16 / 9;
-  background: #050505;
+  background: #070504;
   border-bottom: 1px solid var(--border);
+  overflow: hidden;
 }
 
-.vlog-media video {
+.vlog-player-wrap video {
   width: 100%;
   height: 100%;
   display: block;
   object-fit: cover;
+  background: #070504;
 }
 
-.vlog-body {
-  padding: 28px 30px 32px;
+.vlog-play-btn {
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  border: 2px solid var(--or);
+  background: rgba(15, 10, 6, 0.72);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  color: #ffffff;
   display: flex;
-  flex-direction: column;
-  flex-grow: 1;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.55), 0 0 28px var(--or-glow);
+  transition: transform 0.25s ease, background 0.25s ease, box-shadow 0.25s ease;
 }
 
-.vlog-body h2 {
-  font-size: 1.4rem;
+.vlog-play-btn svg {
+  width: 26px;
+  height: 26px;
+  margin-left: 3px;
+  fill: currentColor;
+}
+
+.vlog-play-btn:hover {
+  transform: scale(1.08);
+  background: var(--or);
+  color: #0a0a0a;
+  box-shadow: 0 14px 36px rgba(0, 0, 0, 0.65), 0 0 36px rgba(242, 110, 54, 0.55);
+}
+
+.vlog-play-btn[hidden] {
+  display: none;
+}
+
+.vlog-stage-info {
+  padding: 28px 32px 30px;
+}
+
+.vlog-stage-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+  font-size: 0.82rem;
+}
+
+.vlog-meta-pills {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--fg-mut);
+  font-weight: 500;
+}
+
+.vlog-dot {
+  color: var(--or);
+}
+
+.vlog-stage-info h2 {
+  font-size: clamp(1.35rem, 2.2vw, 1.75rem);
   font-weight: 700;
-  line-height: 1.35;
-  margin: 0 0 12px;
+  line-height: 1.25;
+  margin: 0 0 10px;
   color: #fff;
 }
 
-.vlog-body h2::before {
+.vlog-stage-info h2::before {
   display: none !important;
+}
+
+.vlog-stage-desc {
+  color: var(--fg-sec);
+  font-size: 0.96rem;
+  line-height: 1.65;
+  margin: 0;
+  max-width: 62ch;
+}
+
+.vlog-playlist-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 20px 22px 16px;
+  border-bottom: 1px solid var(--border);
+}
+
+.vlog-count {
+  font-size: 0.82rem;
+  color: var(--fg-mut);
+  font-weight: 600;
+}
+
+.vlog-list {
+  display: flex;
+  flex-direction: column;
+  padding: 8px;
+  gap: 6px;
+}
+
+.vlog-item {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 104px minmax(0, 1fr);
+  gap: 14px;
+  align-items: center;
+  text-align: left;
+  padding: 10px;
+  border-radius: 14px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+}
+
+.vlog-item:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.vlog-item[aria-current="true"] {
+  background: rgba(242, 110, 54, 0.14);
+  border-color: rgba(242, 110, 54, 0.55);
+}
+
+.vlog-thumb {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border-radius: 10px;
+  overflow: hidden;
+  background: #0a0705;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.vlog-thumb img,
+.vlog-thumb video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  pointer-events: none;
+}
+
+.vlog-thumb-dur {
+  position: absolute;
+  right: 5px;
+  bottom: 5px;
+  padding: 2px 6px;
+  border-radius: 6px;
+  background: rgba(10, 7, 5, 0.82);
+  color: #ffffff;
+  font: 600 0.7rem/1.2 "Public Sans", sans-serif;
+  letter-spacing: 0.02em;
+}
+
+.vlog-item-text {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.vlog-item-kicker {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--fg-mut);
+}
+
+.vlog-item[aria-current="true"] .vlog-item-kicker {
+  color: #ff8a4f;
+}
+
+.vlog-item-title {
+  font-size: 0.94rem;
+  font-weight: 600;
+  line-height: 1.35;
+  color: #ffffff;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow: hidden;
+}
+
+.vlog-item-sub {
+  font-size: 0.78rem;
+  color: var(--fg-mut);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .vlog-empty {
@@ -1089,7 +1272,7 @@ footer a:hover { color: var(--or); }
   .bn h1, .bn.tall h1 { font-size: clamp(2rem, 8.2vw, 2.75rem); max-width: 100%; }
   .bn p, .bn.tall p { font-size: 1.05rem; margin: 16px 0 24px; }
 
-  .two, .peek, .sp-grid, .grid, .gal-grid, .blog-grid, .vlog-grid { grid-template-columns: 1fr; gap: 22px; }
+  .two, .peek, .sp-grid, .grid, .gal-grid, .blog-grid, .vlog-showcase { grid-template-columns: 1fr; gap: 22px; }
   .two { gap: 36px; }
   .sp-grid { margin-top: 32px; }
   .gal-grid { margin-top: 28px; }
@@ -1097,7 +1280,11 @@ footer a:hover { color: var(--or); }
 
   .sp-card { padding: 28px 22px; }
   .blog-card, .vlog-empty { padding: 28px 22px; }
-  .vlog-body { padding: 24px 22px 26px; }
+  .vlog-stage-info { padding: 22px 20px 24px; }
+  .vlog-playlist-head { padding: 16px 18px 14px; }
+  .vlog-item { grid-template-columns: 92px minmax(0, 1fr); gap: 12px; padding: 8px; }
+  .vlog-play-btn { width: 58px; height: 58px; }
+  .vlog-play-btn svg { width: 22px; height: 22px; }
   .blog-footer { flex-wrap: wrap; gap: 8px 16px; }
   .pc { padding: 32px 22px; }
 

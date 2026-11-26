@@ -162,24 +162,114 @@ var VLOGS = [
     return "video/mp4";
   }
 
-  var vlogGrid = document.getElementById("vlog-grid");
+  var showcase = document.getElementById("vlog-showcase");
   var vlogEmpty = document.getElementById("vlog-empty");
-  if(vlogGrid && VLOGS.length){
-    vlogGrid.innerHTML = VLOGS.map(function(v){
-      var posterAttr = v.poster ? ' poster="'+v.poster+'"' : '';
-      var srcUrl = encodeURI(v.src) + (v.poster ? '' : '#t=0.5');
-      return '<article class="vlog-card">'
-        + '<div class="vlog-media"><video controls preload="metadata" playsinline'+posterAttr+'><source src="'+srcUrl+'" type="'+videoMime(v.src)+'">Your browser does not support HTML5 video.</video></div>'
-        + '<div class="vlog-body">'
-        + '<div class="blog-meta-top"><span class="blog-badge">'+(v.c||'SITE VLOG')+'</span><span class="blog-time">'+(v.duration||'')+'</span></div>'
-        + '<h2>'+v.t+'</h2>'
-        + '<p class="blog-desc">'+(v.d||'')+'</p>'
-        + '<div class="blog-footer"><span class="blog-author">Infinite Building Solutions</span><span>'+(v.date||'')+'</span></div>'
-        + '</div></article>';
+  var player = null;
+
+  if(showcase && VLOGS.length){
+    var listHtml = VLOGS.map(function(v, idx){
+      var num = (idx < 9 ? "0" : "") + (idx + 1);
+      var thumbUrl = encodeURI(v.src) + "#t=1.0";
+      var thumbMedia = v.poster
+        ? '<img src="'+v.poster+'" alt="'+v.t+'" loading="lazy">'
+        : '<video muted preload="metadata" playsinline><source src="'+thumbUrl+'" type="'+videoMime(v.src)+'"></video>';
+      return '<button type="button" class="vlog-item" data-vi="'+idx+'" aria-current="'+(idx === 0 ? 'true' : 'false')+'">'
+        + '<span class="vlog-thumb">'+thumbMedia+'<span class="vlog-thumb-dur">'+(v.duration||'')+'</span></span>'
+        + '<span class="vlog-item-text">'
+        + '<span class="vlog-item-kicker"><span>'+num+'</span><span>'+(v.c||'SITE VLOG')+'</span></span>'
+        + '<span class="vlog-item-title">'+v.t+'</span>'
+        + '<span class="vlog-item-sub">'+(v.date||'Karnataka')+'</span>'
+        + '</span></button>';
     }).join("");
+
+    showcase.innerHTML =
+      '<div class="vlog-stage">'
+        + '<div class="vlog-player-wrap">'
+          + '<video id="vlog-player" preload="metadata" playsinline></video>'
+          + '<button type="button" class="vlog-play-btn" id="vlog-play-btn" aria-label="Play video">'
+            + '<svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg>'
+          + '</button>'
+        + '</div>'
+        + '<div class="vlog-stage-info">'
+          + '<div class="vlog-stage-top">'
+            + '<span class="blog-badge" id="vlog-cat"></span>'
+            + '<span class="vlog-meta-pills"><span id="vlog-loc"></span><span class="vlog-dot" aria-hidden="true">&bull;</span><span id="vlog-dur"></span></span>'
+          + '</div>'
+          + '<h2 id="vlog-title"></h2>'
+          + '<p class="vlog-stage-desc" id="vlog-desc"></p>'
+        + '</div>'
+      + '</div>'
+      + '<aside class="vlog-playlist" aria-label="Site walkthrough videos">'
+        + '<div class="vlog-playlist-head"><span class="blog-badge">ALL WALKTHROUGHS</span><span class="vlog-count">'+VLOGS.length+' videos</span></div>'
+        + '<div class="vlog-list" id="vlog-list">'+listHtml+'</div>'
+      + '</aside>';
+
     if(vlogEmpty) vlogEmpty.hidden = true;
-  } else if(vlogGrid){
-    vlogGrid.hidden = true;
+
+    player = document.getElementById("vlog-player");
+    var playBtn = document.getElementById("vlog-play-btn");
+    var elCat = document.getElementById("vlog-cat");
+    var elLoc = document.getElementById("vlog-loc");
+    var elDur = document.getElementById("vlog-dur");
+    var elTitle = document.getElementById("vlog-title");
+    var elDesc = document.getElementById("vlog-desc");
+    var items = showcase.querySelectorAll(".vlog-item[data-vi]");
+
+    function startPlayback(){
+      if(!player) return;
+      player.controls = true;
+      if(playBtn) playBtn.hidden = true;
+      var p = player.play();
+      if(p && typeof p.catch === "function") p.catch(function(){});
+    }
+
+    function selectVlog(index, autoplay){
+      var v = VLOGS[index];
+      if(!v || !player) return;
+      player.pause();
+      if(v.poster){
+        player.setAttribute("poster", v.poster);
+      } else {
+        player.removeAttribute("poster");
+      }
+      var mediaSrc = encodeURI(v.src) + (autoplay || v.poster ? "" : "#t=1.0");
+      player.innerHTML = '<source src="'+mediaSrc+'" type="'+videoMime(v.src)+'">Your browser does not support HTML5 video.';
+      player.load();
+
+      if(elCat) elCat.textContent = v.c || "SITE VLOG";
+      if(elLoc) elLoc.textContent = v.date || "Karnataka";
+      if(elDur) elDur.textContent = v.duration || "";
+      if(elTitle) elTitle.textContent = v.t;
+      if(elDesc) elDesc.textContent = v.d || "";
+
+      [].forEach.call(items, function(it, i){
+        it.setAttribute("aria-current", i === index ? "true" : "false");
+      });
+
+      if(autoplay){
+        startPlayback();
+      } else {
+        player.controls = false;
+        if(playBtn) playBtn.hidden = false;
+      }
+    }
+
+    if(playBtn){
+      playBtn.addEventListener("click", startPlayback);
+    }
+    player.addEventListener("click", function(){
+      if(!player.controls) startPlayback();
+    });
+
+    [].forEach.call(items, function(it){
+      it.addEventListener("click", function(){
+        selectVlog(parseInt(it.dataset.vi, 10) || 0, true);
+      });
+    });
+
+    selectVlog(0, false);
+  } else if(showcase){
+    showcase.hidden = true;
   }
 
   function setBVTab(tab){

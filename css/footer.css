@@ -58,7 +58,10 @@ body > footer .ft-bar {
 
 @media (max-width: 860px) {
   body > footer { padding-top: 40px; }
-  body > footer .ft { grid-template-columns: 1fr; }
+  body > footer .w { padding-left: 20px; padding-right: 20px; }
+  body > footer .ft { grid-template-columns: 1fr; gap: 28px; }
   body > footer .ft > div:last-child { justify-self: start; text-align: left; }
   body > footer .ft-contact { justify-items: start; }
+  body > footer .ft-links { gap: 6px 28px; }
+  body > footer .ft-bar { margin-top: 28px; }
 }

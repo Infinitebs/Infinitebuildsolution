@@ -103,8 +103,52 @@ if(galBtns.length){
 
 // Blogs & Vlogs toggle + video cards renderer
 // Drop .mp4/.webm files in /videos/ and add entries below:
-// { t: 'Title', c: 'CATEGORY', d: 'Short summary', src: 'videos/filename.mp4', poster: 'images/thumb.jpg', duration: '2 min watch', date: 'November 2026' }
-var VLOGS = [];
+// { t: 'Title', c: 'CATEGORY', d: 'Short summary', src: 'videos/filename.webm', poster: 'images/thumb.jpg', duration: '0:59', date: 'Bengaluru' }
+var VLOGS = [
+  {
+    t: 'Seminar Hall Transformation — Bengaluru',
+    c: 'INSTITUTIONAL FIT-OUT',
+    d: 'Video walkthrough of our 243-seater seminar hall transformation featuring acoustical wall treatments, HVAC, fire fighting, and electrical works.',
+    src: 'videos/seminar hall.webm',
+    poster: 'images/seminar-hall.jpg',
+    duration: '0:59',
+    date: 'Bengaluru'
+  },
+  {
+    t: 'Seminar Hall Transformation — Walkthrough II',
+    c: 'INSTITUTIONAL FIT-OUT',
+    d: 'Extended interior tour showcasing finished ceiling acoustics, tiered seating geometry, lighting, and integrated audiovisual execution.',
+    src: 'videos/seminar hall 2.webm',
+    poster: 'images/auditorium.jpg',
+    duration: '1:10',
+    date: 'Bengaluru'
+  },
+  {
+    t: 'Moot Court Hall Transformation — Presidency University',
+    c: 'INTERIORS & FIT-OUT',
+    d: 'Complete transformation of a conventional hall into a custom-built moot court with acoustic panelling and bespoke interior fit-out.',
+    src: 'videos/court hall.webm',
+    poster: 'images/moot-court.jpg',
+    duration: '1:08',
+    date: 'Bengaluru'
+  },
+  {
+    t: 'Classroom Acoustic & AV Fit-Out — Presidency University',
+    c: 'INTERIORS & FIT-OUT',
+    d: 'Fast-track classroom transformation at Presidency University integrating acoustical finishes, audiovisual systems, and modern interiors.',
+    src: 'videos/class room.webm',
+    duration: '0:52',
+    date: 'Bengaluru'
+  },
+  {
+    t: 'Presidency University (MG11) Fit-Out Walkthrough',
+    c: 'INSTITUTIONAL FIT-OUT',
+    d: 'Inside look at our institutional interior and fit-out delivery at Presidency University, highlighting lighting, acoustics, and finish quality.',
+    src: 'videos/presidency MG11.webm',
+    duration: '0:51',
+    date: 'Bengaluru'
+  }
+];
 
 (function(){
   var bvBtns = document.querySelectorAll(".bv-btn[data-bv]");
@@ -112,13 +156,20 @@ var VLOGS = [];
   var panelBlogs = document.getElementById("panel-blogs");
   if(!bvBtns.length || !panelVlogs || !panelBlogs) return;
 
+  function videoMime(src){
+    if(/\.webm(\?|#|$)/i.test(src)) return "video/webm";
+    if(/\.ogg(\?|#|$)/i.test(src)) return "video/ogg";
+    return "video/mp4";
+  }
+
   var vlogGrid = document.getElementById("vlog-grid");
   var vlogEmpty = document.getElementById("vlog-empty");
   if(vlogGrid && VLOGS.length){
     vlogGrid.innerHTML = VLOGS.map(function(v){
       var posterAttr = v.poster ? ' poster="'+v.poster+'"' : '';
+      var srcUrl = encodeURI(v.src) + (v.poster ? '' : '#t=0.5');
       return '<article class="vlog-card">'
-        + '<div class="vlog-media"><video controls preload="metadata" playsinline'+posterAttr+'><source src="'+v.src+'" type="video/mp4">Your browser does not support HTML5 video.</video></div>'
+        + '<div class="vlog-media"><video controls preload="metadata" playsinline'+posterAttr+'><source src="'+srcUrl+'" type="'+videoMime(v.src)+'">Your browser does not support HTML5 video.</video></div>'
         + '<div class="vlog-body">'
         + '<div class="blog-meta-top"><span class="blog-badge">'+(v.c||'SITE VLOG')+'</span><span class="blog-time">'+(v.duration||'')+'</span></div>'
         + '<h2>'+v.t+'</h2>'

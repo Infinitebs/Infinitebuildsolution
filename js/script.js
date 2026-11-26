@@ -101,6 +101,70 @@ if(galBtns.length){
   });
 }
 
+// Blogs & Vlogs toggle + video cards renderer
+// Drop .mp4/.webm files in /videos/ and add entries below:
+// { t: 'Title', c: 'CATEGORY', d: 'Short summary', src: 'videos/filename.mp4', poster: 'images/thumb.jpg', duration: '2 min watch', date: 'November 2026' }
+var VLOGS = [];
+
+(function(){
+  var bvBtns = document.querySelectorAll(".bv-btn[data-bv]");
+  var panelVlogs = document.getElementById("panel-vlogs");
+  var panelBlogs = document.getElementById("panel-blogs");
+  if(!bvBtns.length || !panelVlogs || !panelBlogs) return;
+
+  var vlogGrid = document.getElementById("vlog-grid");
+  var vlogEmpty = document.getElementById("vlog-empty");
+  if(vlogGrid && VLOGS.length){
+    vlogGrid.innerHTML = VLOGS.map(function(v){
+      var posterAttr = v.poster ? ' poster="'+v.poster+'"' : '';
+      return '<article class="vlog-card">'
+        + '<div class="vlog-media"><video controls preload="metadata" playsinline'+posterAttr+'><source src="'+v.src+'" type="video/mp4">Your browser does not support HTML5 video.</video></div>'
+        + '<div class="vlog-body">'
+        + '<div class="blog-meta-top"><span class="blog-badge">'+(v.c||'SITE VLOG')+'</span><span class="blog-time">'+(v.duration||'')+'</span></div>'
+        + '<h2>'+v.t+'</h2>'
+        + '<p class="blog-desc">'+(v.d||'')+'</p>'
+        + '<div class="blog-footer"><span class="blog-author">Infinite Building Solutions</span><span>'+(v.date||'')+'</span></div>'
+        + '</div></article>';
+    }).join("");
+    if(vlogEmpty) vlogEmpty.hidden = true;
+  } else if(vlogGrid){
+    vlogGrid.hidden = true;
+  }
+
+  function setBVTab(tab){
+    var target = (tab === "vlogs") ? "vlogs" : "blogs";
+    panelVlogs.hidden = (target !== "vlogs");
+    panelBlogs.hidden = (target !== "blogs");
+    if(target !== "vlogs"){
+      [].forEach.call(panelVlogs.querySelectorAll("video"), function(vid){ vid.pause(); });
+    }
+    [].forEach.call(bvBtns, function(btn){
+      btn.setAttribute("aria-selected", btn.dataset.bv === target ? "true" : "false");
+    });
+  }
+
+  [].forEach.call(bvBtns, function(btn){
+    btn.addEventListener("click", function(){
+      setBVTab(btn.dataset.bv);
+    });
+  });
+
+  var switchBlogsBtn = document.querySelector(".bv-switch-blogs");
+  if(switchBlogsBtn){
+    switchBlogsBtn.addEventListener("click", function(){
+      setBVTab("blogs");
+    });
+  }
+
+  try{
+    var sp = new URLSearchParams(window.location.search);
+    var initTab = sp.get("tab") || (window.location.hash === "#vlogs" ? "vlogs" : "blogs");
+    setBVTab(initTab);
+  }catch(e){
+    setBVTab("blogs");
+  }
+})();
+
 var fm=document.getElementById("f");
 if(fm) fm.onsubmit=function(e){
   e.preventDefault();

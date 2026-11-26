@@ -197,6 +197,11 @@ var VLOGS = [
           + '</div>'
           + '<h2 id="vlog-title"></h2>'
           + '<p class="vlog-stage-desc" id="vlog-desc"></p>'
+          + '<div class="vlog-mob-nav">'
+            + '<button type="button" class="vlog-mob-btn" id="vlog-prev" aria-label="Previous walkthrough">&larr; Prev</button>'
+            + '<span class="vlog-mob-pos" id="vlog-pos"></span>'
+            + '<button type="button" class="vlog-mob-btn" id="vlog-next" aria-label="Next walkthrough">Next &rarr;</button>'
+          + '</div>'
         + '</div>'
       + '</div>'
       + '<aside class="vlog-playlist" aria-label="Site walkthrough videos">'
@@ -213,7 +218,13 @@ var VLOGS = [
     var elDur = document.getElementById("vlog-dur");
     var elTitle = document.getElementById("vlog-title");
     var elDesc = document.getElementById("vlog-desc");
+    var elPos = document.getElementById("vlog-pos");
+    var prevBtn = document.getElementById("vlog-prev");
+    var nextBtn = document.getElementById("vlog-next");
     var items = showcase.querySelectorAll(".vlog-item[data-vi]");
+    var currentIdx = 0;
+
+    function pad2(n){ return (n < 10 ? "0" : "") + n; }
 
     function startPlayback(){
       if(!player) return;
@@ -226,6 +237,7 @@ var VLOGS = [
     function selectVlog(index, autoplay){
       var v = VLOGS[index];
       if(!v || !player) return;
+      currentIdx = index;
       player.pause();
       if(v.poster){
         player.setAttribute("poster", v.poster);
@@ -241,9 +253,14 @@ var VLOGS = [
       if(elDur) elDur.textContent = v.duration || "";
       if(elTitle) elTitle.textContent = v.t;
       if(elDesc) elDesc.textContent = v.d || "";
+      if(elPos) elPos.textContent = pad2(index + 1) + " / " + pad2(VLOGS.length);
 
       [].forEach.call(items, function(it, i){
-        it.setAttribute("aria-current", i === index ? "true" : "false");
+        var active = (i === index);
+        it.setAttribute("aria-current", active ? "true" : "false");
+        if(active && autoplay && window.innerWidth <= 860 && typeof it.scrollIntoView === "function"){
+          it.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
+        }
       });
 
       if(autoplay){
@@ -260,6 +277,16 @@ var VLOGS = [
     player.addEventListener("click", function(){
       if(!player.controls) startPlayback();
     });
+    if(prevBtn){
+      prevBtn.addEventListener("click", function(){
+        selectVlog((currentIdx - 1 + VLOGS.length) % VLOGS.length, true);
+      });
+    }
+    if(nextBtn){
+      nextBtn.addEventListener("click", function(){
+        selectVlog((currentIdx + 1) % VLOGS.length, true);
+      });
+    }
 
     [].forEach.call(items, function(it){
       it.addEventListener("click", function(){

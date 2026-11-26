@@ -740,6 +740,8 @@ nav a.on {
 
 .vlog-stage,
 .vlog-playlist {
+  min-width: 0;
+  max-width: 100%;
   background: var(--bg-card);
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
@@ -747,6 +749,12 @@ nav a.on {
   border-radius: 20px;
   overflow: hidden;
   box-shadow: 0 18px 44px rgba(0, 0, 0, 0.45);
+}
+
+#panel-vlogs h2.rv,
+#panel-blogs h2.rv {
+  opacity: 1;
+  transform: none;
 }
 
 .vlog-player-wrap {
@@ -850,6 +858,10 @@ nav a.on {
   max-width: 62ch;
 }
 
+.vlog-mob-nav {
+  display: none;
+}
+
 .vlog-playlist-head {
   display: flex;
   align-items: center;
@@ -900,6 +912,7 @@ nav a.on {
 }
 
 .vlog-thumb {
+  display: block;
   position: relative;
   width: 100%;
   aspect-ratio: 16 / 9;
@@ -1272,7 +1285,7 @@ footer a:hover { color: var(--or); }
   .bn h1, .bn.tall h1 { font-size: clamp(2rem, 8.2vw, 2.75rem); max-width: 100%; }
   .bn p, .bn.tall p { font-size: 1.05rem; margin: 16px 0 24px; }
 
-  .two, .peek, .sp-grid, .grid, .gal-grid, .blog-grid, .vlog-showcase { grid-template-columns: 1fr; gap: 22px; }
+  .two, .peek, .sp-grid, .grid, .gal-grid, .blog-grid, .vlog-showcase { grid-template-columns: minmax(0, 1fr); gap: 18px; }
   .two { gap: 36px; }
   .sp-grid { margin-top: 32px; }
   .gal-grid { margin-top: 28px; }
@@ -1280,9 +1293,68 @@ footer a:hover { color: var(--or); }
 
   .sp-card { padding: 28px 22px; }
   .blog-card, .vlog-empty { padding: 28px 22px; }
-  .vlog-stage-info { padding: 22px 20px 24px; }
+  .vlog-stage-info { padding: 20px 18px 20px; }
+  .vlog-stage-desc { font-size: 0.92rem; }
+  .vlog-mob-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-top: 18px;
+    padding-top: 16px;
+    border-top: 1px solid var(--border);
+  }
+  .vlog-mob-btn {
+    padding: 8px 16px;
+    border-radius: 99px;
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    background: rgba(255, 255, 255, 0.06);
+    color: #ffffff;
+    font: 600 0.84rem "Public Sans", sans-serif;
+    cursor: pointer;
+    transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+  }
+  .vlog-mob-btn:hover, .vlog-mob-btn:active {
+    background: var(--or);
+    border-color: var(--or);
+    color: #0a0a0a;
+  }
+  .vlog-mob-pos {
+    font: 700 0.82rem "Archivo", sans-serif;
+    letter-spacing: 0.08em;
+    color: #ff8a4f;
+  }
   .vlog-playlist-head { padding: 16px 18px 14px; }
-  .vlog-item { grid-template-columns: 92px minmax(0, 1fr); gap: 12px; padding: 8px; }
+  .vlog-list {
+    max-width: 100%;
+    flex-direction: row;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    gap: 12px;
+    padding: 14px 16px 18px;
+  }
+  .vlog-list::-webkit-scrollbar { display: none; }
+  .vlog-item {
+    width: 215px;
+    flex: 0 0 215px;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+    padding: 10px;
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    scroll-snap-align: start;
+  }
+  .vlog-item[aria-current="true"] {
+    background: rgba(242, 110, 54, 0.16);
+    border-color: var(--or);
+    box-shadow: 0 8px 22px rgba(0, 0, 0, 0.35);
+  }
+  .vlog-item-title { font-size: 0.88rem; }
   .vlog-play-btn { width: 58px; height: 58px; }
   .vlog-play-btn svg { width: 22px; height: 22px; }
   .blog-footer { flex-wrap: wrap; gap: 8px 16px; }
@@ -1338,6 +1410,7 @@ footer a:hover { color: var(--or); }
    Partners band & footer separation
    -------------------------------------------------------------------------- */
 .partners.sec { padding: 90px 0 52px; }
+@media (max-width: 860px) { .partners.sec { padding: 64px 0 40px; } }
 .partners {
   background: linear-gradient(180deg, #141414 0%, #0c0c0c 100%);
   border-top: 1px solid rgba(242, 110, 54, 0.45);
